@@ -1,0 +1,90 @@
+﻿@model LibraryWebMVC.ViewModels.CollectionItemsViewModel
+
+@{
+    ViewData["Title"] = "Catalog";
+}
+
+<h1>Catalog</h1>
+<hr />
+@if(@ViewBag.IsNotNull)
+{
+    <div class="form-horizontal">
+    <div class="form-group">
+        <form action="~/Home/Catalog">
+            <label>@Html.DisplayNameFor(model => model.CollectionItems.First().Author.FirstName): </label>
+            <input name="firstName" value="@Model.FilterViewModel.SelectedFirstName" />
+          
+            <label>@Html.DisplayNameFor(model => model.CollectionItems.First().Book.Name) </label>
+            <input name="bookName" value="@Model.FilterViewModel.SelectedBookName" />
+  
+            <input type="submit" value="Filter" />
+        </form>
+        <table id="BookCollectionItemList" class="table table-responsive" style="width:400px">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CollectionItems.First().Author.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CollectionItems.First().Author.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CollectionItems.First().Author.SurName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CollectionItems.First().Author.BirthDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CollectionItems.First().Book.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CollectionItems.First().Book.Year)
+                    </th>
+                </tr>
+            </thead>
+            @foreach (var item in Model.CollectionItems) 
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author.SurName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author.BirthDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Book.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Book.Year)
+                    </td>
+                </tr>
+            }
+        </table>
+
+        </div>
+    </div>
+    <page-link page-model="Model.PageViewModel" page-action="Catalog"
+               page-url-firstName="@(Model.FilterViewModel.SelectedFirstName)"
+               page-url-bookName="@(Model.FilterViewModel.SelectedBookName)"></page-link>
+
+    <form action="~/Home/SaveDocument">
+        <input type="submit" value="Save to file" />
+    </form>
+}
+else
+{
+    <div> 
+        <p> @Html.ActionLink("Log in", "LogIn", "Login") to see catalog.</p>
+    </div>
+}
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

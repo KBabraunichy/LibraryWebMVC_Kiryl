@@ -1,0 +1,75 @@
+﻿@model LibraryWebMVC.Utils.CollectionItems
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>BookCollectionItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <p class="text-danger">
+            @ViewBag.ErrorMessage
+        </p>
+        @if(@ViewBag.IsAuthor) 
+        {
+            <form method="post" action="@Url.Action("CreateAuthor", "Admin")" >  
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Author.FirstName" class="control-label"></label>
+                    <input asp-for="Author.FirstName" class="form-control" />
+                    <span asp-validation-for="Author.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Author.LastName" class="control-label"></label>
+                    <input asp-for="Author.LastName" class="form-control" />
+                    <span asp-validation-for="Author.LastName" class="text-danger"></span>
+                </div>
+                    <div class="form-group">
+                    <label asp-for="Author.SurName" class="control-label"></label>
+                    <input asp-for="Author.SurName" class="form-control" />
+                    <span asp-validation-for="Author.SurName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Author.BirthDate" class="control-label"></label>
+                    <input asp-for="Author.BirthDate" class="form-control" />
+                    <span asp-validation-for="Author.BirthDate" class="text-danger"></span>
+                </div>  
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        }
+        else 
+        {
+            <form method="post" action="@Url.Action("CreateBook", "Admin")" >
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Book.Name" class="control-label"></label>
+                    <input asp-for="Book.Name" class="form-control" />
+                    <span asp-validation-for="Book.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Book.Year" class="control-label"></label>
+                    <input asp-for="Book.Year" class="form-control" />
+                    <span asp-validation-for="Book.Year" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Book.AuthorId" class="control-label"></label>
+                    <input asp-for="Book.AuthorId" class="form-control" />
+                    <span asp-validation-for="Book.AuthorId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

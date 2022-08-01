@@ -1,0 +1,89 @@
+﻿@model LibraryWebMVC.ViewModels.LibViewModel
+
+@{
+    ViewData["Title"] = "AdminTools";
+}
+
+<h1>AdminTools</h1>
+<hr />
+
+<div class="row">
+    <p class="text-danger">
+        @ViewBag.ErrorMessage
+    </p>
+    <div class="table-responsive col-md-6">
+        <p><b>Authors List</b></p>
+        <p>
+            @Html.ActionLink("Create new", "Create", "Admin", new {api = "Authors"})
+        </p>
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Authors.First().Id)</th>
+                    <th>@Html.DisplayNameFor(model => model.Authors.First().FirstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Authors.First().LastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Authors.First().SurName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Authors.First().BirthDate)</th>
+                    <th>Edit/Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var author in Model.Authors)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => author.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => author.FirstName)</td>
+                    <td>@Html.DisplayFor(modelItem => author.LastName)</td>
+                    <td>@Html.DisplayFor(modelItem => author.SurName)</td>
+                    <td>@Html.DisplayFor(modelItem => author.BirthDate)</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Admin", new {api = "Authors", id = author.Id}) | 
+                        @Html.ActionLink("Delete", "Delete", "Admin", new {api = "Authors", id = author.Id})
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="table-responsive col-md-6">
+        <p><b>Books List</b></p>
+        <p>
+            @Html.ActionLink("Create new", "Create", "Admin", new {api = "Books"})
+        </p>
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Books.First().Id)</th>
+                    <th>@Html.DisplayNameFor(model => model.Books.First().Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.Books.First().Year)</th>
+                    <th>@Html.DisplayNameFor(model => model.Books.First().AuthorId)</th>
+                    <th>Edit/Delete</th>
+                </tr>
+            </thead>
+            @foreach (var book in Model.Books)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => book.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => book.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => book.Year)</td>
+                    <td>@Html.DisplayFor(modelItem => book.AuthorId)</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Admin", new {api = "Books", id = book.Id}) | 
+                        @Html.ActionLink("Delete", "Delete", "Admin", new {api = "Books", id = book.Id})
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+@section Scripts {
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('table').DataTable({
+                stateSave: true,
+            });
+        });
+    </script>
+}
