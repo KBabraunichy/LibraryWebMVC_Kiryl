@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace LibraryWebMVC.Interfaces
 {
-    public interface ICatalogService
+    public interface IRestEaseService
     {
         [Header("Authorization")]
         AuthenticationHeaderValue Authorization { get; set; }

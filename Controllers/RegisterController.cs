@@ -22,7 +22,7 @@ namespace LibraryWebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(User user)
         {
-            var response = await _apiRequest.PostRequestResponseMessage("api/User", user);
+            var response = await _apiRequest.PostRequestResponseMessage(UserApi, user);
 
             if (response.IsSuccessStatusCode)
             {

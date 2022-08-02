@@ -22,7 +22,7 @@ namespace LibraryWebMVC.Controllers
         public async Task<IActionResult> LogInAsync(UserLogin user)
         {
 
-            var response = await _apiRequest.PostRequestResponseMessage("api/Login", user);
+            var response = await _apiRequest.PostRequestResponseMessage(LoginApi, user);
 
             if (response.IsSuccessStatusCode)
             {

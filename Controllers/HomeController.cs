@@ -8,12 +8,14 @@ namespace LibraryWebMVC.Controllers
     public class HomeController : Controller
     {
         private readonly IApiRequestService _apiRequest;
+        private readonly IApiAuthService _apiAuthService;
 
         private static List<CollectionItems> LibraryCollection;
 
-        public HomeController(IApiRequestService apiRequest)
+        public HomeController(IApiRequestService apiRequest, IApiAuthService apiAuthService)
         {
             _apiRequest = apiRequest;
+            _apiAuthService = apiAuthService;
         }
 
         public IActionResult Index()
@@ -23,8 +25,8 @@ namespace LibraryWebMVC.Controllers
 
         public async Task<IActionResult> Catalog(string firstName, string bookName, int page = 1)
         {
-            var isAuthorized = await _apiRequest.IsAuthorized();
-            if (isAuthorized)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null)
             {
                 int pageSize = 7;
 
@@ -78,7 +80,7 @@ namespace LibraryWebMVC.Controllers
 
             Response.Clear();
             Response.ContentType = "text/csv";
-            Response.Headers["Content-Disposition"] = "attachment;filename=myfilename.csv";
+            Response.Headers["Content-Disposition"] = $"attachment;filename={FileName}.csv";
 
             
             Task task = Task.Run(() => {

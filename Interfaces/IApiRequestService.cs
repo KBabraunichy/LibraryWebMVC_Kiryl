@@ -6,11 +6,8 @@ namespace LibraryWebMVC.Interfaces
     public interface IApiRequestService
     {
         public Task<HttpResponseMessage?> PostRequestResponseMessage(string api, object body);
-        public Task<bool> IsAuthorized();
-        public Task<bool> IsAdmin();
 
         //for restease 
-
         public Task<List<CollectionItems>> GetList();
 
         public Task<string> Get(string api, int id = 0);

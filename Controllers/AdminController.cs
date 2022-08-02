@@ -10,20 +10,22 @@ namespace LibraryWebMVC.Controllers
     public class AdminController : Controller
     {
         private readonly IApiRequestService _apiRequest;
+        private readonly IApiAuthService _apiAuthService;
 
         private static string Api { get; set; } = "";
         private static int Id { get; set; } = 0;
 
-        public AdminController(IApiRequestService apiRequest)
+        public AdminController(IApiRequestService apiRequest, IApiAuthService apiAuthService)
         {
             _apiRequest = apiRequest;
+            _apiAuthService = apiAuthService;
         }
 
         public async Task<IActionResult> AdminToolsAsync()
         {
 
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null)
             {
                 var booksJSON = await _apiRequest.Get("Books");
                 var authorsJSON = await _apiRequest.Get("Authors");
@@ -31,7 +33,7 @@ namespace LibraryWebMVC.Controllers
 
                 if (booksJSON is null || authorsJSON is null)
                 {
-                    ViewBag.ErrorMessage = "There was an error when receiving data";
+                    ViewBag.ErrorMessage = CommonErrorMessage;
                     return View();
                 }
                 else
@@ -63,8 +65,8 @@ namespace LibraryWebMVC.Controllers
         public async Task<IActionResult> EditAsync(string api, int id, string errorMessage = null)
         {
 
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null && authorizedRole.Equals(AdminRole))
             {
                 if (id == 0)
                 {
@@ -75,7 +77,7 @@ namespace LibraryWebMVC.Controllers
                 if (objectJSON is null)
                 {
 
-                    ViewBag.ErrorMessage = "There was an error when receiving data";
+                    ViewBag.ErrorMessage = CommonErrorMessage;
                     return Redirect("~/Admin/AdminTools");
                 }
                 else
@@ -115,14 +117,14 @@ namespace LibraryWebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> EditBookAsync(Book book)
         {
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null && authorizedRole.Equals(AdminRole))
             {
                 var objectJSON = await _apiRequest.Get(Api, Id);
 
                 if (objectJSON is null)
                 {
-                    ViewBag.ErrorMessage = "There was an error when receiving data";
+                    ViewBag.ErrorMessage = CommonErrorMessage;
                     return View();
                 }
 
@@ -141,14 +143,14 @@ namespace LibraryWebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> EditAuthorAsync(Author author)
         {
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null && authorizedRole.Equals(AdminRole))
             {
                 var objectJSON = await _apiRequest.Get(Api, Id);
 
                 if (objectJSON is null)
                 {
-                    ViewBag.ErrorMessage = "There was an error when receiving data";
+                    ViewBag.ErrorMessage = CommonErrorMessage;
                     return View();
                 }
 
@@ -168,8 +170,8 @@ namespace LibraryWebMVC.Controllers
         public async Task<IActionResult> DeleteAsync(string api, int id)
         {
 
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null && authorizedRole.Equals(AdminRole))
             {
                 if (id == 0)
                 {
@@ -197,8 +199,8 @@ namespace LibraryWebMVC.Controllers
         public async Task<IActionResult> CreateAsync(string api, string errorMessage = null)
         {
 
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null && authorizedRole.Equals(AdminRole))
             {
                 Api = api;
 
@@ -225,8 +227,8 @@ namespace LibraryWebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBookAsync(Book book)
         {
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null && authorizedRole.Equals(AdminRole))
             {
                 var stringResponse = await _apiRequest.Post(Api, book);
                 if (!string.IsNullOrEmpty(stringResponse))
@@ -244,8 +246,8 @@ namespace LibraryWebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAuthorAsync(Author author)
         {
-            bool isAdmin = await _apiRequest.IsAdmin();
-            if (isAdmin)
+            var authorizedRole = await _apiAuthService.GetAuthorizedRole();
+            if (authorizedRole is not null && authorizedRole.Equals(AdminRole))
             {
                 var stringResponse = await _apiRequest.Post(Api, author);
                 if (!string.IsNullOrEmpty(stringResponse))

@@ -1,23 +1,21 @@
 ﻿@using LibraryWebMVC.Interfaces
-@inject IApiRequestService _apiRequest
+@inject IApiAuthService _apiAuthservice
 
 @{
     ViewBag.IsAuthorized = false;
     ViewBag.IsAdmin = false;
 
-    bool isAuthorized = await _apiRequest.IsAuthorized();
-    if(isAuthorized)
+    var authorizedRole = await _apiAuthservice.GetAuthorizedRole();
+    if(authorizedRole is not null)
     {
         ViewBag.IsAuthorized = true;
 
-        bool isAdmin = await _apiRequest.IsAdmin();
-        if (isAdmin)
+        if (authorizedRole.Equals(AdminRole))
         {
             ViewBag.IsAdmin = true;
         }
 
     }
- 
 
 }
 
